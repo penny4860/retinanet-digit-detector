@@ -39,10 +39,10 @@ from keras_retinanet import models
 from keras_retinanet.callbacks import RedirectModel
 from keras_retinanet.callbacks.eval import Evaluate
 from keras_retinanet.models.retinanet import retinanet_bbox
-from keras_retinanet.preprocessing.csv_generator import CSVGenerator
-from keras_retinanet.preprocessing.kitti import KittiGenerator
-from keras_retinanet.preprocessing.open_images import OpenImagesGenerator
-from keras_retinanet.preprocessing.pascal_voc import PascalVocGenerator
+#from keras_retinanet.preprocessing.csv_generator import CSVGenerator
+#from keras_retinanet.preprocessing.kitti import KittiGenerator
+#from keras_retinanet.preprocessing.open_images import OpenImagesGenerator
+#from keras_retinanet.preprocessing.pascal_voc import PascalVocGenerator
 from keras_retinanet.utils.anchors import make_shapes_callback
 from keras_retinanet.utils.config import read_config_file, parse_anchor_parameters
 from keras_retinanet.utils.keras_version import check_keras_version
@@ -239,7 +239,8 @@ def create_generators(args, preprocess_image):
         )
     else:
         transform_generator = random_transform_generator(flip_x_chance=0.5)
- 
+
+    from pascal import PascalVocGenerator
     train_generator = PascalVocGenerator(
         args.pascal_path,
         'trainval',

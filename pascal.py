@@ -1,5 +1,14 @@
 
 from keras_retinanet.preprocessing.generator import Generator
+import os
+import numpy as np
+from six import raise_from
+from PIL import Image
+
+try:
+    import xml.etree.cElementTree as ET
+except ImportError:
+    import xml.etree.ElementTree as ET
 
 
 class PascalVocGenerator(Generator):
@@ -12,7 +21,7 @@ class PascalVocGenerator(Generator):
         self,
         data_dir,
         set_name,
-        classes=voc_classes,
+        classes=["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
         image_extension='.jpg',
         skip_truncated=False,
         skip_difficult=False,
@@ -27,7 +36,7 @@ class PascalVocGenerator(Generator):
         self.data_dir             = data_dir
         self.set_name             = set_name
         self.classes              = classes
-        self.image_names          = [l.strip().split(None, 1)[0] for l in open(os.path.join(data_dir, 'ImageSets', 'Main', set_name + '.txt')).readlines()]
+        # self.image_names          = [l.strip().split(None, 1)[0] for l in open(os.path.join(data_dir, 'ImageSets', 'Main', set_name + '.txt')).readlines()]
         self.image_extension      = image_extension
         self.skip_truncated       = skip_truncated
         self.skip_difficult       = skip_difficult
@@ -135,8 +144,32 @@ class PascalVocGenerator(Generator):
             raise_from(ValueError('invalid annotations file: {}: {}'.format(filename, e)), None)
 
 
+def _findNode(parent, name, debug_name=None, parse=None):
+    if debug_name is None:
+        debug_name = name
+
+    result = parent.find(name)
+    if result is None:
+        raise ValueError('missing element \'{}\''.format(debug_name))
+    if parse is not None:
+        try:
+            return parse(result.text)
+        except ValueError as e:
+            raise_from(ValueError('illegal value for \'{}\': {}'.format(debug_name, e)), None)
+    return result
 
 
+def read_image_bgr(path):
+    """ Read an image in BGR format.
 
+    Args
+        path: Path to the image.
+    """
+    image = np.asarray(Image.open(path).convert('RGB'))
+    return image[:, :, ::-1].copy()
+
+
+if __name__ == '__main__':
+    pass
 
 

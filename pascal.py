@@ -11,6 +11,20 @@ except ImportError:
     import xml.etree.ElementTree as ET
 
 
+svhn_classes = {
+    '10'    : 0,
+    '1'     : 1,
+    '2'     : 2,
+    '3'     : 3,
+    '4'     : 4,
+    '5'     : 5,
+    '6'     : 6,
+    '7'     : 7,
+    '8'     : 8,
+    '9'     : 9,
+}
+
+
 class PascalVocGenerator(Generator):
     """ Generate data for a Pascal VOC dataset.
 
@@ -21,8 +35,8 @@ class PascalVocGenerator(Generator):
         self,
         data_dir,
         set_name,
-        classes=["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
-        image_extension='.jpg',
+        classes=svhn_classes,
+        image_extension='.png',
         skip_truncated=False,
         skip_difficult=False,
         **kwargs
@@ -37,6 +51,9 @@ class PascalVocGenerator(Generator):
         self.set_name             = set_name
         self.classes              = classes
         # self.image_names          = [l.strip().split(None, 1)[0] for l in open(os.path.join(data_dir, 'ImageSets', 'Main', set_name + '.txt')).readlines()]
+
+        import glob
+        self.image_names = glob.glob(os.path.join(data_dir, "JPEGImages") + "/*.png")[:-4]
         self.image_extension      = image_extension
         self.skip_truncated       = skip_truncated
         self.skip_difficult       = skip_difficult

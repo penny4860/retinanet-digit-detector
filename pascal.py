@@ -112,8 +112,8 @@ class PascalVocGenerator(Generator):
     def __parse_annotation(self, element):
         """ Parse an annotation given an XML element.
         """
-        truncated = _findNode(element, 'truncated', parse=int)
-        difficult = _findNode(element, 'difficult', parse=int)
+#         truncated = _findNode(element, 'truncated', parse=int)
+#         difficult = _findNode(element, 'difficult', parse=int)
 
         class_name = _findNode(element, 'name').text
         if class_name not in self.classes:
@@ -128,7 +128,7 @@ class PascalVocGenerator(Generator):
         box[2] = _findNode(bndbox, 'xmax', 'bndbox.xmax', parse=float) - 1
         box[3] = _findNode(bndbox, 'ymax', 'bndbox.ymax', parse=float) - 1
 
-        return truncated, difficult, box, label
+        return box, label
 
     def __parse_annotations(self, xml_root):
         """ Parse all annotations under the xml_root.
@@ -136,14 +136,9 @@ class PascalVocGenerator(Generator):
         annotations = {'labels': np.empty((len(xml_root.findall('object')),)), 'bboxes': np.empty((len(xml_root.findall('object')), 4))}
         for i, element in enumerate(xml_root.iter('object')):
             try:
-                truncated, difficult, box, label = self.__parse_annotation(element)
+                box, label = self.__parse_annotation(element)
             except ValueError as e:
                 raise_from(ValueError('could not parse object #{}: {}'.format(i, e)), None)
-
-            if truncated and self.skip_truncated:
-                continue
-            if difficult and self.skip_difficult:
-                continue
 
             annotations['bboxes'][i, :] = box
             annotations['labels'][i] = label

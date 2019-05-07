@@ -53,7 +53,9 @@ class PascalVocGenerator(Generator):
         # self.image_names          = [l.strip().split(None, 1)[0] for l in open(os.path.join(data_dir, 'ImageSets', 'Main', set_name + '.txt')).readlines()]
 
         import glob
-        self.image_names = glob.glob(os.path.join(data_dir, "JPEGImages") + "/*.png")[:-4]
+        self.image_names = glob.glob(os.path.join(data_dir, "JPEGImages") + "/*.png")
+        self.image_names = [os.path.basename(img)[:-4] for img in self.image_names]
+
         self.image_extension      = image_extension
         self.skip_truncated       = skip_truncated
         self.skip_difficult       = skip_difficult

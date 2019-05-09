@@ -223,23 +223,24 @@ def create_generators(args, preprocess_image):
         'preprocess_image' : preprocess_image, 
     }
  
-    # create random transform generator for augmenting training data
-    if args.random_transform:
-        transform_generator = random_transform_generator(
-            min_rotation=-0.1,
-            max_rotation=0.1,
-            min_translation=(-0.1, -0.1),
-            max_translation=(0.1, 0.1),
-            min_shear=-0.1,
-            max_shear=0.1,
-            min_scaling=(0.9, 0.9),
-            max_scaling=(1.1, 1.1),
-            flip_x_chance=0.5,
-            flip_y_chance=0.5,
-        )
-    else:
-        transform_generator = random_transform_generator(flip_x_chance=0.5)
+#     # create random transform generator for augmenting training data
+#     if args.random_transform:
+#         transform_generator = random_transform_generator(
+#             min_rotation=-0.1,
+#             max_rotation=0.1,
+#             min_translation=(-0.1, -0.1),
+#             max_translation=(0.1, 0.1),
+#             min_shear=-0.1,
+#             max_shear=0.1,
+#             min_scaling=(0.9, 0.9),
+#             max_scaling=(1.1, 1.1),
+#             flip_x_chance=0.5,
+#             flip_y_chance=0.5,
+#         )
+#     else:
+#         transform_generator = random_transform_generator(flip_x_chance=0.5)
 
+    transform_generator = random_transform_generator()
     from pascal import PascalVocGenerator
     train_generator = PascalVocGenerator(
         args.pascal_path,
@@ -318,7 +319,7 @@ def parse_args(args):
     parser.add_argument('--multi-gpu',        help='Number of GPUs to use for parallel processing.', type=int, default=0)
     parser.add_argument('--multi-gpu-force',  help='Extra flag needed to enable (experimental) multi-gpu support.', action='store_true')
     parser.add_argument('--epochs',           help='Number of epochs to train.', type=int, default=50)
-    parser.add_argument('--steps',            help='Number of steps per epoch.', type=int, default=10000)
+    parser.add_argument('--steps',            help='Number of steps per epoch.', type=int, default=2)
     parser.add_argument('--lr',               help='Learning rate.', type=float, default=1e-5)
     parser.add_argument('--snapshot-path',    help='Path to store snapshots of models during training (defaults to \'./snapshots\')', default='./snapshots')
     parser.add_argument('--tensorboard-dir',  help='Log directory for Tensorboard output', default='./logs')

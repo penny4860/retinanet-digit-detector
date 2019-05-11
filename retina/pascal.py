@@ -34,7 +34,6 @@ class PascalVocGenerator(Generator):
     def __init__(
         self,
         data_dir,
-        set_name,
         classes=svhn_classes,
         image_extension='.png',
         skip_truncated=False,
@@ -48,7 +47,6 @@ class PascalVocGenerator(Generator):
             csv_class_file: Path to the CSV classes file.
         """
         self.data_dir             = data_dir
-        self.set_name             = set_name
         self.classes              = classes
         # self.image_names          = [l.strip().split(None, 1)[0] for l in open(os.path.join(data_dir, 'ImageSets', 'Main', set_name + '.txt')).readlines()]
 

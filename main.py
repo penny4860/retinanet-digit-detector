@@ -241,14 +241,12 @@ def create_generators(args, preprocess_image):
     transform_generator = random_transform_generator()
     train_generator = PascalVocGenerator(
         args.pascal_path,
-        'trainval',
         transform_generator=transform_generator,
         **common_args
     )
     
     validation_generator = PascalVocGenerator(
         args.pascal_path,
-        'test',
         **common_args
     )
     return train_generator, validation_generator

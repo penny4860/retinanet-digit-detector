@@ -21,65 +21,66 @@ def get_session():
     config.gpu_options.allow_growth = True
     return tf.Session(config=config)
 
-# use this environment flag to change which GPU to use
-#os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
-# set the modified tf session as backend in keras
-keras.backend.tensorflow_backend.set_session(get_session())
-
-
-
-
-# adjust this to point to your downloaded/trained model
-# models can be downloaded here: https://github.com/fizyr/keras-retinanet/releases
-model_path = os.path.join('snapshots', 'resnet.h5')
-
-# load retinanet model
-model = models.load_model(model_path, backbone_name='resnet50')
-
-# if the model is not converted to an inference model, use the line below
-# see: https://github.com/fizyr/keras-retinanet#converting-a-training-model-to-inference-model
-model = models.convert_model(model)
-model.summary()
-
-# # load label to names mapping for visualization purposes
-labels_to_names = {0: '10', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9'}
-
-# load image
-image = read_image_bgr('samples/JPEGImages/2.png')
-
-# copy to draw on
-draw = image.copy()
-draw = cv2.cvtColor(draw, cv2.COLOR_BGR2RGB)
-
-# preprocess image for network
-image = preprocess_image(image)
-image, scale = resize_image(image)
-
-# process image
-start = time.time()
-boxes, scores, labels = model.predict_on_batch(np.expand_dims(image, axis=0))
-print("processing time: ", time.time() - start)
-
-# correct for image scale
-boxes /= scale
-
-# visualize detections
-for box, score, label in zip(boxes[0], scores[0], labels[0]):
-    # scores are sorted so we can break
-    if score < 0.5:
-        break
+def visualize(boxes, scores, labels, scale,
+              labels_to_names = {0: '10', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9'}):
+    # correct for image scale
+    boxes /= scale
+    
+    # visualize detections
+    for box, score, label in zip(boxes[0], scores[0], labels[0]):
+        # scores are sorted so we can break
+        if score < 0.5:
+            break
+            
+        color = label_color(label)
         
-    color = label_color(label)
+        b = box.astype(int)
+        draw_box(draw, b, color=color)
+        
+        caption = "{} {:.3f}".format(labels_to_names[label], score)
+        draw_caption(draw, b, caption)
+        
+    plt.figure(figsize=(15, 15))
+    plt.axis('off')
+    plt.imshow(draw)
+    plt.show()
+
+
+if __name__ == '__main__':
+    # set the modified tf session as backend in keras
+    keras.backend.tensorflow_backend.set_session(get_session())
     
-    b = box.astype(int)
-    draw_box(draw, b, color=color)
+    # adjust this to point to your downloaded/trained model
+    # models can be downloaded here: https://github.com/fizyr/keras-retinanet/releases
+    model_path = os.path.join('snapshots', 'resnet.h5')
     
-    caption = "{} {:.3f}".format(labels_to_names[label], score)
-    draw_caption(draw, b, caption)
+    # load retinanet model
+    model = models.load_model(model_path, backbone_name='resnet50')
     
-plt.figure(figsize=(15, 15))
-plt.axis('off')
-plt.imshow(draw)
-plt.show()
+    # if the model is not converted to an inference model, use the line below
+    # see: https://github.com/fizyr/keras-retinanet#converting-a-training-model-to-inference-model
+    model = models.convert_model(model)
+    model.summary()
+    
+    # load image
+    image = read_image_bgr('samples/JPEGImages/2.png')
+    
+    # copy to draw on
+    draw = image.copy()
+    draw = cv2.cvtColor(draw, cv2.COLOR_BGR2RGB)
+    
+    # preprocess image for network
+    image = preprocess_image(image)
+    image, scale = resize_image(image)
+    
+    # process image
+    start = time.time()
+    boxes, scores, labels = model.predict_on_batch(np.expand_dims(image, axis=0))
+    print("processing time: ", time.time() - start)
+    
+    visualize(boxes, scores, labels, scale)
+
+    
+
 

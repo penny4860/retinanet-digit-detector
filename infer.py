@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 
-import keras
-
 from keras_retinanet import models
 from keras_retinanet.utils.image import read_image_bgr, preprocess_image, resize_image
 
-# import miscellaneous modules
 import matplotlib.pyplot as plt
 import cv2
 import os
 import numpy as np
 import time
+
+from retina.utils import visualize_boxes
 
 
 if __name__ == '__main__':
@@ -55,7 +54,6 @@ if __name__ == '__main__':
     boxes = boxes[0]
     #################################################
     
-    from utils import visualize_boxes
     visualize_boxes(draw, boxes, labels, scores, class_labels=['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'])
     
     # 5. plot    

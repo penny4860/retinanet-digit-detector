@@ -33,8 +33,9 @@ class PascalVocGenerator(Generator):
 
     def __init__(
         self,
-        data_dir,
-        set_name,
+        # data_dir,
+        imgs_dir,
+        anns_dir,
         classes=svhn_classes,
         image_extension='.png',
         skip_truncated=False,
@@ -47,13 +48,15 @@ class PascalVocGenerator(Generator):
             base_dir: Directory w.r.t. where the files are to be searched (defaults to the directory containing the csv_data_file).
             csv_class_file: Path to the CSV classes file.
         """
-        self.data_dir             = data_dir
-        self.set_name             = set_name
+        # self.data_dir             = data_dir
         self.classes              = classes
         # self.image_names          = [l.strip().split(None, 1)[0] for l in open(os.path.join(data_dir, 'ImageSets', 'Main', set_name + '.txt')).readlines()]
 
+        self.imgs_dir = imgs_dir
+        self.anns_dir = anns_dir
+
         import glob
-        self.image_names = glob.glob(os.path.join(data_dir, "JPEGImages") + "/*.png")
+        self.image_names = glob.glob(imgs_dir + "/*.png")
         self.image_names = [os.path.basename(img)[:-4] for img in self.image_names]
 
         self.image_extension      = image_extension
@@ -99,14 +102,14 @@ class PascalVocGenerator(Generator):
     def image_aspect_ratio(self, image_index):
         """ Compute the aspect ratio for an image with image_index.
         """
-        path  = os.path.join(self.data_dir, 'JPEGImages', self.image_names[image_index] + self.image_extension)
+        path  = os.path.join(self.imgs_dir, self.image_names[image_index] + self.image_extension)
         image = Image.open(path)
         return float(image.width) / float(image.height)
 
     def load_image(self, image_index):
         """ Load an image at the image_index.
         """
-        path = os.path.join(self.data_dir, 'JPEGImages', self.image_names[image_index] + self.image_extension)
+        path = os.path.join(self.imgs_dir, self.image_names[image_index] + self.image_extension)
         return read_image_bgr(path)
 
     def __parse_annotation(self, element):
@@ -150,7 +153,7 @@ class PascalVocGenerator(Generator):
         """
         filename = self.image_names[image_index] + '.xml'
         try:
-            tree = ET.parse(os.path.join(self.data_dir, 'Annotations', filename))
+            tree = ET.parse(os.path.join(self.anns_dir, filename))
             return self.__parse_annotations(tree.getroot())
         except ET.ParseError as e:
             raise_from(ValueError('invalid annotations file: {}: {}'.format(filename, e)), None)
@@ -184,6 +187,11 @@ def read_image_bgr(path):
 
 
 if __name__ == '__main__':
-    pass
-
+    
+    dataset_path = "../samples"
+    
+    imgs_dir = "../samples/JPEGImages"
+    anns_dir = "../samples/Annotations"
+    generator = PascalVocGenerator(imgs_dir, anns_dir)
+    print(len(generator))
 

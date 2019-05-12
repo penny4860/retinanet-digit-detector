@@ -240,15 +240,15 @@ def create_generators(args, preprocess_image):
 
     transform_generator = random_transform_generator()
     train_generator = PascalVocGenerator(
-        args.pascal_path,
-        'trainval',
+        args.train_imgs_dir,
+        args.train_anns_dir,
         transform_generator=transform_generator,
         **common_args
     )
     
     validation_generator = PascalVocGenerator(
-        args.pascal_path,
-        'test',
+        args.valid_imgs_dir,
+        args.valid_anns_dir,
         **common_args
     )
     return train_generator, validation_generator
@@ -292,14 +292,11 @@ def parse_args(args):
     subparsers = parser.add_subparsers(help='Arguments for specific dataset types.', dest='dataset_type')
     subparsers.required = True
  
-    coco_parser = subparsers.add_parser('coco')
-    coco_parser.add_argument('coco_path', help='Path to dataset directory (ie. /tmp/COCO).')
- 
     pascal_parser = subparsers.add_parser('pascal')
-    pascal_parser.add_argument('pascal_path', default="samples", help='Path to dataset directory (ie. /tmp/VOCdevkit).')
- 
-    kitti_parser = subparsers.add_parser('kitti')
-    kitti_parser.add_argument('kitti_path', help='Path to dataset directory (ie. /tmp/kitti).')
+    pascal_parser.add_argument('train_imgs_dir', default="samples/JPEGImages", help='Path to dataset directory (ie. /tmp/VOCdevkit).')
+    pascal_parser.add_argument('train_anns_dir', default="samples/Annotations", help='Path to dataset directory (ie. /tmp/VOCdevkit).')
+    pascal_parser.add_argument('valid_imgs_dir', default="samples/JPEGImages", help='Path to dataset directory (ie. /tmp/VOCdevkit).')
+    pascal_parser.add_argument('valid_anns_dir', default="samples/Annotations", help='Path to dataset directory (ie. /tmp/VOCdevkit).')
  
     def csv_list(string):
         return string.split(',')
@@ -436,6 +433,7 @@ def main(args=None):
 # keras_retinanet/bin/train.py pascal /path/to/VOCdevkit/VOC2007
 # python main.py pascal samples
 if __name__ == '__main__':
-    main(["pascal", "samples"])
+    # train_imgs_dir, train_anns_dir, valid_imgs_dir, valid_anns_dir
+    main(["pascal", "samples/JPEGImages", "samples/Annotations", "samples/JPEGImages", "samples/Annotations"])
 
 

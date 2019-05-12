@@ -308,12 +308,12 @@ def parse_args(args):
     group.add_argument('--no-weights',        help='Don\'t initialize the model with any weights.', dest='imagenet_weights', action='store_const', const=False)
  
     parser.add_argument('--backbone',         help='Backbone model used by retinanet.', default='resnet50', type=str)
-    parser.add_argument('--batch-size',       help='Size of the batches.', default=2, type=int)
+    parser.add_argument('--batch-size',       help='Size of the batches.', default=4, type=int)
     parser.add_argument('--gpu',              help='Id of the GPU to use (as reported by nvidia-smi).')
     parser.add_argument('--multi-gpu',        help='Number of GPUs to use for parallel processing.', type=int, default=0)
     parser.add_argument('--multi-gpu-force',  help='Extra flag needed to enable (experimental) multi-gpu support.', action='store_true')
     parser.add_argument('--epochs',           help='Number of epochs to train.', type=int, default=50)
-    parser.add_argument('--steps',            help='Number of steps per epoch.', type=int, default=10)
+    parser.add_argument('--steps',            help='Number of steps per epoch.', type=int, default=10000)
     parser.add_argument('--lr',               help='Learning rate.', type=float, default=1e-5)
     parser.add_argument('--snapshot-path',    help='Path to store snapshots of models during training (defaults to \'./snapshots\')', default='./snapshots')
     parser.add_argument('--tensorboard-dir',  help='Log directory for Tensorboard output', default='./logs')
@@ -321,8 +321,8 @@ def parse_args(args):
     parser.add_argument('--no-evaluation',    help='Disable per epoch evaluation.', dest='evaluation', action='store_false')
     parser.add_argument('--freeze-backbone',  help='Freeze training of backbone layers.', action='store_true')
     parser.add_argument('--random-transform', help='Randomly transform image and annotations.', action='store_true')
-    parser.add_argument('--image-min-side',   help='Rescale the image so the smallest side is min_side.', type=int, default=800)
-    parser.add_argument('--image-max-side',   help='Rescale the image if the largest side is larger than max_side.', type=int, default=1333)
+    parser.add_argument('--image-min-side',   help='Rescale the image so the smallest side is min_side.', type=int, default=416)
+    parser.add_argument('--image-max-side',   help='Rescale the image if the largest side is larger than max_side.', type=int, default=448)
     parser.add_argument('--config',           help='Path to a configuration parameters .ini file.')
     parser.add_argument('--weighted-average', help='Compute the mAP using the weighted average of precisions among classes.', action='store_true')
     parser.add_argument('--compute-val-loss', help='Compute validation loss during training', dest='compute_val_loss', action='store_true')
@@ -434,6 +434,28 @@ def main(args=None):
 # python main.py pascal samples
 if __name__ == '__main__':
     # train_imgs_dir, train_anns_dir, valid_imgs_dir, valid_anns_dir
-    main(["pascal", "samples/JPEGImages", "samples/Annotations", "samples/JPEGImages", "samples/Annotations"])
+    main(["pascal",
+          "/home/jjs/git/dataset/svhn/train_imgs",
+          "/home/jjs/git/dataset/svhn/voc_format_annotation/train",
+          "/home/jjs/git/dataset/svhn/test_imgs",
+          "/home/jjs/git/dataset/svhn/voc_format_annotation/test"])
+
+
+# Epoch 00008: saving model to ./snapshots/resnet50_pascal_08.h5
+# Epoch 9/50
+# 10000/10000 [==============================] - 2320s 232ms/step - loss: 0.9907 - regression_loss: 0.8740 - classification_loss: 0.1167
+# Running network: 100% (13068 of 13068) |#############################################################################################################################| Elapsed Time: 0:07:08 Time:  0:07:08
+# Parsing annotations: 100% (13068 of 13068) |#########################################################################################################################| Elapsed Time: 0:00:02 Time:  0:00:02
+# 1744 instances of class 10 with average precision: 0.8420
+# 5099 instances of class 1 with average precision: 0.7849
+# 4149 instances of class 2 with average precision: 0.8515
+# 2882 instances of class 3 with average precision: 0.7990
+# 2523 instances of class 4 with average precision: 0.8098
+# 2384 instances of class 5 with average precision: 0.8293
+# 1977 instances of class 6 with average precision: 0.8062
+# 2019 instances of class 7 with average precision: 0.8341
+# 1660 instances of class 8 with average precision: 0.7755
+# 1595 instances of class 9 with average precision: 0.8154
+# mAP: 0.8148
 
 

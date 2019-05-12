@@ -240,13 +240,15 @@ def create_generators(args, preprocess_image):
 
     transform_generator = random_transform_generator()
     train_generator = PascalVocGenerator(
-        args.pascal_path,
+        args.imgs_dir,
+        args.anns_dir,
         transform_generator=transform_generator,
         **common_args
     )
     
     validation_generator = PascalVocGenerator(
-        args.pascal_path,
+        args.imgs_dir,
+        args.anns_dir,
         **common_args
     )
     return train_generator, validation_generator
@@ -290,14 +292,9 @@ def parse_args(args):
     subparsers = parser.add_subparsers(help='Arguments for specific dataset types.', dest='dataset_type')
     subparsers.required = True
  
-    coco_parser = subparsers.add_parser('coco')
-    coco_parser.add_argument('coco_path', help='Path to dataset directory (ie. /tmp/COCO).')
- 
     pascal_parser = subparsers.add_parser('pascal')
-    pascal_parser.add_argument('pascal_path', default="samples", help='Path to dataset directory (ie. /tmp/VOCdevkit).')
- 
-    kitti_parser = subparsers.add_parser('kitti')
-    kitti_parser.add_argument('kitti_path', help='Path to dataset directory (ie. /tmp/kitti).')
+    pascal_parser.add_argument('imgs_dir', default="samples/JPEGImages", help='Path to dataset directory (ie. /tmp/VOCdevkit).')
+    pascal_parser.add_argument('anns_dir', default="samples/Annotations", help='Path to dataset directory (ie. /tmp/VOCdevkit).')
  
     def csv_list(string):
         return string.split(',')
@@ -434,6 +431,6 @@ def main(args=None):
 # keras_retinanet/bin/train.py pascal /path/to/VOCdevkit/VOC2007
 # python main.py pascal samples
 if __name__ == '__main__':
-    main(["pascal", "samples"])
+    main(["pascal", "samples/JPEGImages", "samples/Annotations"])
 
 

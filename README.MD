@@ -19,7 +19,7 @@ I have implemented retinanet digit detector using [keras-retinanet package](http
 In this project, the pretrained weight file is stored in [resnet50_full.h5](https://drive.google.com/drive/folders/1kKmDqZ1G4TC-OD3IRdTSJA5H4n6ZAouN). Test set evaluation (13068-images) score is ```mAP: 0.8148```
 
 * Download [resnet50_full.h5](https://drive.google.com/drive/folders/1kKmDqZ1G4TC-OD3IRdTSJA5H4n6ZAouN) to the ```project-root/snapshots```
-* Run ```infer.py```
+* Run [infer.py](https://github.com/penny4860/retinanet-digit-detector/blob/master/main.py)
 
 You can see the following figure:
 
@@ -34,4 +34,5 @@ An annotation file of this format can be downloaded from [svhn-voc-annotation-fo
 
 #### 3. Training from scratch
 
+Please refer to [main.py](https://github.com/penny4860/retinanet-digit-detector/blob/master/main.py)
 

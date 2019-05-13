@@ -16,7 +16,12 @@ I have implemented retinanet digit detector using [keras-retinanet package](http
 
 #### 1. Digit Detection using pretrained weight file
 
-In this project, the pretrained weight file is stored in [resnet50_full.h5](https://drive.google.com/drive/folders/1kKmDqZ1G4TC-OD3IRdTSJA5H4n6ZAouN).
+In this project, the pretrained weight file is stored in [resnet50_full.h5](https://drive.google.com/drive/folders/1kKmDqZ1G4TC-OD3IRdTSJA5H4n6ZAouN). Test set evaluation (13068-images) score is ```mAP: 0.8148```
 
-Example code for predicting a digit region in a natural image is described in detection_example.ipynb.
-Test set evaluation (13068-images) score is ```mAP: 0.8148```
+* Download [resnet50_full.h5](https://drive.google.com/drive/folders/1kKmDqZ1G4TC-OD3IRdTSJA5H4n6ZAouN) to the ```project-root/snapshots```
+* Run ```infer.py```
+
+You can see the following figure:
+
+<img src="samples/samples/Figure_1.png" height="400" width="600">
+

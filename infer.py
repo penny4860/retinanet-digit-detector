@@ -11,9 +11,8 @@ import time
 
 from retina.utils import visualize_boxes
 
-MODEL_PATH = 'snapshots/resnet50_full.h5'
-IMAGE_PATH = "C://Users//penny//git//dataset//svhn//test_imgs"
-
+MODEL_PATH = 'snapshots/resnet.h5'
+IMAGE_PATH = 'samples/JPEGImages/1.png'
 
 def load_inference_model(model_path=os.path.join('snapshots', 'resnet.h5')):
     model = models.load_model(model_path, backbone_name='resnet50')
@@ -37,36 +36,30 @@ if __name__ == '__main__':
     model = load_inference_model(MODEL_PATH)
     
     # load image
-    import glob
-    img_fnames = glob.glob(IMAGE_PATH + "//*.png")
-
-    for fname in img_fnames:    
-        image = read_image_bgr(fname)
-        
-        # copy to draw on
-        draw = image.copy()
-        draw = cv2.cvtColor(draw, cv2.COLOR_BGR2RGB)
-        
-        # preprocess image for network
-        image = preprocess_image(image)
-        image, _ = resize_image(image, 416, 448)
-        
-        # process image
-        start = time.time()
-        boxes, scores, labels = model.predict_on_batch(np.expand_dims(image, axis=0))
-        print("processing time: ", time.time() - start)
-        
-        boxes = post_process(boxes, draw, image)
-        labels = labels[0]
-        scores = scores[0]
-        boxes = boxes[0]
-        
-        visualize_boxes(draw, boxes, labels, scores, class_labels=['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'])
-        
-        # 5. plot    
-        # plt.imshow(draw)
-        plt.imsave(os.path.basename(fname), draw)
-        print(os.path.basename(fname))
-        # plt.show()
+    image = read_image_bgr(IMAGE_PATH)
+    
+    # copy to draw on
+    draw = image.copy()
+    draw = cv2.cvtColor(draw, cv2.COLOR_BGR2RGB)
+    
+    # preprocess image for network
+    image = preprocess_image(image)
+    image, _ = resize_image(image, 416, 448)
+    
+    # process image
+    start = time.time()
+    boxes, scores, labels = model.predict_on_batch(np.expand_dims(image, axis=0))
+    print("processing time: ", time.time() - start)
+    
+    boxes = post_process(boxes, draw, image)
+    labels = labels[0]
+    scores = scores[0]
+    boxes = boxes[0]
+    
+    visualize_boxes(draw, boxes, labels, scores, class_labels=['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'])
+    
+    # 5. plot    
+    plt.imshow(draw)
+    plt.show()
 
 

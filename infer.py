@@ -11,7 +11,7 @@ import time
 
 from retina.utils import visualize_boxes
 
-MODEL_PATH = 'snapshots/resnet.h5'
+MODEL_PATH = 'snapshots/resnet50_full.h5'
 IMAGE_PATH = 'samples/JPEGImages/1.png'
 
 def load_inference_model(model_path=os.path.join('snapshots', 'resnet.h5')):

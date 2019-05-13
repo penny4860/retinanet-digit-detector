@@ -25,3 +25,13 @@ You can see the following figure:
 
 <img src="samples/samples/Figure_1.png" height="400" width="600">
 
+
+#### 2. SVHN dataset in Pascal Voc annotation format
+
+In this project, I use [pascal voc format](http://host.robots.ox.ac.uk/pascal/VOC/) as annotation information to train object detector.
+An annotation file of this format can be downloaded from [svhn-voc-annotation-format](https://github.com/penny4860/svhn-voc-annotation-format).
+
+
+#### 3. Training from scratch
+
+

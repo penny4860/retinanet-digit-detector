@@ -44,7 +44,7 @@ if __name__ == '__main__':
     
     # preprocess image for network
     image = preprocess_image(image)
-    image, _ = resize_image(image)
+    image, _ = resize_image(image, 416, 448)
     
     # process image
     start = time.time()
